@@ -87,6 +87,7 @@ public class AdressListFragment extends Fragment implements AutoCompleteAdapter.
         });
 
         //Autocomplete Realisation
+
         adressTv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -100,11 +101,13 @@ public class AdressListFragment extends Fragment implements AutoCompleteAdapter.
                         .setTypeFilter(TypeFilter.ADDRESS)
                         .setQuery(charSequence.toString())
                         .build();
+
                 placesClient.findAutocompletePredictions(request).addOnCompleteListener(new OnCompleteListener<FindAutocompletePredictionsResponse>() {
                     @Override
                     public void onComplete(@NonNull Task<FindAutocompletePredictionsResponse> task) {
                         AutoCompleteAdapter adapter = new AutoCompleteAdapter(task.getResult().getAutocompletePredictions(), AdressListFragment.this);
                         autoCompleteRv.setAdapter(adapter);
+
                     }
                 });
             }
@@ -119,10 +122,12 @@ public class AdressListFragment extends Fragment implements AutoCompleteAdapter.
 
     @Override
     public void onPlace(AutocompletePrediction prediction) {
+        Log.i("tagggg", "");
         adressTv.setText(prediction.getPrimaryText(null));
         destination.setLocale(prediction.getFullText(null).toString());
         List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME);
         FetchPlaceRequest request = FetchPlaceRequest.newInstance(prediction.getPlaceId(), placeFields);
+        ((ContentActivity) getActivity()).onDestinationPicked(null, destination);
         placesClient.fetchPlace(request).addOnCompleteListener(new OnCompleteListener<FetchPlaceResponse>() {
             @Override
             public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
@@ -132,7 +137,6 @@ public class AdressListFragment extends Fragment implements AutoCompleteAdapter.
             }
         });
     }
-
 
     public Address getLocationFromAddress(Context context, String strAddress) {
 

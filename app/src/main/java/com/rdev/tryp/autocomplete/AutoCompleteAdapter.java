@@ -13,15 +13,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AutoCompleteAdapter extends RecyclerView.Adapter {
+public class AutoCompleteAdapter extends RecyclerView.Adapter<AutoCompleteAdapter.TextHolder> {
     List<AutocompletePrediction> data;
 
     public interface onPlacePicked {
         void onPlace(AutocompletePrediction prediction);
     }
 
-    onPlacePicked listener;
-
+    private onPlacePicked listener;
 
     public AutoCompleteAdapter(List<AutocompletePrediction> autocompletePredictions, onPlacePicked listener) {
         this.data = autocompletePredictions;
@@ -30,8 +29,9 @@ public class AutoCompleteAdapter extends RecyclerView.Adapter {
 
     class TextHolder extends RecyclerView.ViewHolder {
 
-        TextView address_tv;
-        TextView address_desc_tv;
+        final TextView address_tv;
+        final TextView address_desc_tv;
+        private AutocompletePrediction data;
 
         public TextHolder(@NonNull View itemView) {
             super(itemView);
@@ -40,23 +40,28 @@ public class AutoCompleteAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPlace(data.get(getAdapterPosition()));
+                    listener.onPlace(data);
                 }
             });
+        }
+
+        void onAttach(AutocompletePrediction data) {
+            this.data = data;
+            address_tv.setText(data.getPrimaryText(null));
+            address_desc_tv.setText(data.getFullText(null));
         }
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TextHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new TextHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.autocomplete_layout, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((TextHolder) holder).address_tv.setText(data.get(position).getPrimaryText(null));
-        ((TextHolder) holder).address_desc_tv.setText(data.get(position).getFullText(null));
+    public void onBindViewHolder(@NonNull TextHolder holder, int position) {
+        holder.onAttach(data.get(position));
     }
 
     @Override

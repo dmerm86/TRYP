@@ -138,20 +138,20 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_marginStart="55dp"
                             android:layout_marginEnd="30dp"
-                            android:orientation="horizontal">
+                            android:layout_marginStart="55dp">
 
                             <androidx.appcompat.widget.AppCompatEditText
                                 android:id="@+id/adress_tv"
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
                                 android:layout_margin="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp"
                                 android:layout_marginStart="8dp"
                                 android:layout_marginTop="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginBottom="8dp"
                                 android:background="@null"
+                                android:baselineAligned="false"
                                 android:imeOptions="actionDone"
                                 android:inputType="text"
                                 android:lines="1"
